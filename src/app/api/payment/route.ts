@@ -1,10 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import MidtransService from '@/shared/actions/rootpaymentservice';
-import { IPaymentItem } from '@/shared/models/paymentinterfaces';
+import type { IPaymentItem } from '@/shared/models/paymentinterfaces';
+import type { NextRequest } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const data: IPaymentItem[] = await req.json();
+    const data = (await req.json()) as IPaymentItem[];
 
     if (!Array.isArray(data) || data.length === 0) {
       return NextResponse.json({ error: 'Invalid payment items' }, { status: 400 });
