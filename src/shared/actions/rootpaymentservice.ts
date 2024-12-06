@@ -12,7 +12,7 @@ class MidtransService {
     this.snap = new Midtrans.Snap({
       isProduction: env.NODE_ENV === 'production',
       serverKey: env.MIDTRANS_SERVER_KEY,
-      clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY,
+      clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY!,
     });
   }
 
