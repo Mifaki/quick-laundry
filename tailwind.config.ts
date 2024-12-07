@@ -30,7 +30,7 @@ export default {
         "heading-4": ["28px", "auto"],
         "heading-5": ["24px", "auto"],
         "heading-6": ["20px", "auto"],
-        "display-1": ["72px", "auto"],
+        "display-1": ["64px", "82px"],
         "display-2": ["54px", "auto"],
       },
       borderRadius: {

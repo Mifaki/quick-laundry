@@ -1,16 +1,9 @@
-import { Button } from "@/shared/container/ui/button";
-import RightSection from "./section/RightSection";
-import LeftSection from "./section/LeftSection";
+import HeroSection from "./section/hero-section/HeroSection";
 
 const HomeContainer = () => {
   return (
-    <div className="flex h-screen w-full border">
-      <div className="flex-[4] border-r">
-        <LeftSection />
-      </div>
-      <div className="flex-[6]">
-        <RightSection />
-      </div>
+    <div className="w-full h-screen flex justify-center items-center bg-[url('https://utfs.io/f/8uwNmLARV9ZHhq0enwG52snFeMjztZoVHa1SKwpYUdP4fNm9')] bg-cover">
+      <HeroSection />
     </div>
   );
 };

@@ -12,9 +12,9 @@ const CounterItem = (props: ICounterItemsProps) => {
     <div className="flex items-center gap-8">
       <div className="text-center">
         <h2 className="text-heading-4 font-semibold">{props.count}</h2>
-        <p className="text-gray-700">{props.name}</p>
+        <p className="text-gray-700 text-caption-1">{props.name}</p>
       </div>
-      {props.showLine && <VerticalLine height="h-8" />}
+      {props.showLine && <VerticalLine height="h-10" width="w-[2px]" />}
     </div>
   );
 };

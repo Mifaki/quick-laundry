@@ -3,17 +3,17 @@ import { ICounterData } from "./counterinterface";
 export const COUNTER_DATA: ICounterData[] = [
   {
     id: 1,
-    name: "Capital Raised",
-    count: "115k+",
+    name: "Total Machine",
+    count: "15+",
   },
   {
     id: 2,
     name: "Happy Customers",
-    count: "100k+",
+    count: "100+",
   },
   {
     id: 3,
-    name: "Property Options",
-    count: "100k+",
+    name: "Handled Laundry",
+    count: "300+",
   },
 ];
