@@ -1,24 +1,18 @@
-import { Button } from "@/shared/container/ui/button"
+import { Button } from "@/shared/container/ui/button";
+import RightSection from "./section/RightSection";
+import LeftSection from "./section/LeftSection";
 
 const HomeContainer = () => {
-    return (
-        <div className="w-full h-screen flex flex-col justify-center items-center">
-            <p>HomeContainer</p>
-            <div className="flex items-center gap-4 mt-4">
-                <Button
-                    size={"lg"}
-                >
-                    Primary
-                </Button>
-                <Button
-                    size={"lg"}
-                    variant={"secondary"}
-                >
-                    Secondary
-                </Button>
-            </div>
-        </div>
-    )
-}
+  return (
+    <div className="flex h-screen w-full border">
+      <div className="flex-[4] border-r">
+        <LeftSection />
+      </div>
+      <div className="flex-[6]">
+        <RightSection />
+      </div>
+    </div>
+  );
+};
 
-export default HomeContainer
+export default HomeContainer;
