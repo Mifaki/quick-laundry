@@ -3,7 +3,7 @@ import LeftSection from "./LeftSection";
 
 const HeroSection = () => {
   return (
-    <div className="flex rounded-3xl bg-white h-[85vh] overflow-hidden">
+    <div className="flex rounded-3xl bg-white h-[85vh] w-[90%] overflow-hidden">
       <div className="flex-[4.5]">
         <LeftSection />
       </div>
