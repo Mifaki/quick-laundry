@@ -5,17 +5,21 @@ import HorizontalLine from '@/shared/container/line/HorizontalLine';
 import { Button } from '@/shared/container/ui/button';
 import { COUNTER_DATA } from '../../../models/CounterData';
 import CounterItem from '../../item-counter/CounterItem';
+import Navbar from '@/shared/container/navigation/Navbar';
 
 const LeftSection = () => {
   const router = useRouter();
 
   return (
     <section className="flex flex-col gap-8 p-8">
+      <div className='flex justify-between items-center'>
       <img
         src="https://utfs.io/f/8uwNmLARV9ZHnW0Ki69ef0o7BzjkwUqPtgMdviHGEXp8C9Zb"
         alt="Quick Laundry Logo"
         className="w-32"
       />
+      <Navbar />
+      </div>
       <div className="space-y-4">
         <h1 className="text-display-1 font-semibold">Reserve Your Machine Now</h1>
         <div className="flex items-center gap-4">
