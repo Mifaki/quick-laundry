@@ -1,14 +1,15 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { format, parse } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
+import MachineCard from '@/shared/container/machine-card/MachineCard';
 import { Button } from '@/shared/container/ui/button';
 import { Calendar } from '@/shared/container/ui/calendar';
-import { CalendarIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import MachineCard from '@/shared/container/machine-card/MachineCard';
 import {
   Form,
   FormControl,
@@ -28,34 +29,88 @@ import {
   SelectValue,
 } from '@/shared/container/ui/select';
 import { Separator } from '@/shared/container/ui/separator';
-import { toast } from '@/shared/usecase/use-toast';
-import { UserSchema } from '../models/schema';
+import { ISessionDetail, ISessionsResponseData } from '@/shared/models/sessionInterface';
+import { useToast } from '@/shared/usecase/use-toast';
+import { UserSchema } from '../../models/schema';
 
-export default function PaymentForm() {
+interface PaymentFormProps {
+  data: ISessionsResponseData;
+  onSubmit: (values: z.infer<typeof UserSchema>) => Promise<void>;
+}
+
+export default function PaymentForm({ data, onSubmit }: PaymentFormProps) {
+  const [availableTimeSlots, setAvailableTimeSlots] = useState<string[]>([]);
+  const [availableMachines, setAvailableMachines] = useState<ISessionDetail[]>([]);
+
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof UserSchema>>({
     resolver: zodResolver(UserSchema),
     defaultValues: {
-      date: new Date(),
+      date: undefined,
+      session: undefined,
+      laundryMachineId: undefined,
     },
   });
 
-  function onSubmit(values: z.infer<typeof UserSchema>) {
-    try {
-      console.log(values);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      );
-    } catch (error) {
-      console.error('Form submission error', error);
+  const selectedDate = form.watch('date');
+  const selectedSession = form.watch('session');
+
+  useEffect(() => {
+    if (selectedDate) {
+      const formattedDate = format(selectedDate, 'dd, MM, yyyy');
+
+      if (data.dates.includes(formattedDate)) {
+        const timeSlotsForDate = data.timeSlots?.[formattedDate] ?? {};
+        const timeSlots = Object.keys(timeSlotsForDate);
+        setAvailableTimeSlots(timeSlots);
+      } else {
+        setAvailableTimeSlots([]);
+        form.setValue('session', '');
+      }
     }
-  }
+  }, [selectedDate, data.dates, data.timeSlots, form]);
+
+  useEffect(() => {
+    if (selectedDate && selectedSession) {
+      const formattedDate = format(selectedDate, 'dd, MM, yyyy');
+      const machinesForSlot = data.timeSlots[formattedDate]?.[selectedSession] ?? [];
+      const availableMachinesForSlot = machinesForSlot.filter((machine) => !machine.isBooked);
+
+      setAvailableMachines(availableMachinesForSlot);
+    } else {
+      setAvailableMachines([]);
+    }
+  }, [selectedDate, selectedSession, data.timeSlots]);
+
+  const handleSubmit = async (values: z.infer<typeof UserSchema>) => {
+    toast({
+      title: 'Membuat Pesanan anda...',
+      description: 'Mohon tunggun sebentar, kami sedang memproses pesanan anda',
+      duration: 2000,
+    });
+
+    try {
+      await onSubmit(values);
+    } catch (error) {
+      console.error('Error submitting order', error);
+      toast({
+        title: 'Error',
+        description: 'Terjadi error saat membuat pesanan anda, silahkan coba kembali',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const isDateDisabled = (date: Date) => {
+    const formattedDate = format(date, 'dd, MM, yyyy');
+    return !data.dates.includes(formattedDate);
+  };
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(handleSubmit)}
         className="w-full space-y-8"
       >
         <div>
@@ -70,8 +125,8 @@ export default function PaymentForm() {
                     <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="shadcn"
-                        type=""
+                        placeholder="john doe"
+                        type="text"
                         {...field}
                       />
                     </FormControl>
@@ -90,7 +145,7 @@ export default function PaymentForm() {
                     <FormLabel>Phone Number</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="shadcn"
+                        placeholder="0881021212"
                         {...field}
                       />
                     </FormControl>
@@ -137,6 +192,7 @@ export default function PaymentForm() {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
+                          disabled={isDateDisabled}
                           initialFocus
                         />
                       </PopoverContent>
@@ -155,17 +211,23 @@ export default function PaymentForm() {
                     <FormLabel>Jam</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      value={field.value}
+                      disabled={!selectedDate}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a verified email to display" />
+                          <SelectValue placeholder="Pilih jam" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="m@example.com">m@example.com</SelectItem>
-                        <SelectItem value="m@google.com">m@google.com</SelectItem>
-                        <SelectItem value="m@support.com">m@support.com</SelectItem>
+                        {availableTimeSlots.map((timeSlot) => (
+                          <SelectItem
+                            key={timeSlot}
+                            value={timeSlot}
+                          >
+                            {timeSlot}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -184,17 +246,25 @@ export default function PaymentForm() {
               <FormLabel>Mesin Laundry</FormLabel>
               <Select
                 onValueChange={field.onChange}
-                defaultValue={field.value}
+                value={field.value}
+                disabled={!selectedDate || !selectedSession}
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a verified email to display" />
+                    <SelectValue placeholder="Pilih mesin laundry" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="m@example.com">m@example.com</SelectItem>
-                  <SelectItem value="m@google.com">m@google.com</SelectItem>
-                  <SelectItem value="m@support.com">m@support.com</SelectItem>
+                  {availableMachines
+                    .filter((machine) => !machine.isBooked)
+                    .map((machine) => (
+                      <SelectItem
+                        key={machine.machineId}
+                        value={machine.machineId.toString()}
+                      >
+                        {machine.machineName}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -204,34 +274,16 @@ export default function PaymentForm() {
 
         <ScrollArea className="h-[400px] w-full">
           <div className="space-y-4">
-            <MachineCard
-              id="Test"
-              state="available"
-              title="Mesin Laundry 1"
-              sessionStart="17:00"
-              sessionEnd="18:00"
-            />
-            <MachineCard
-              id="Test"
-              state="available"
-              title="Mesin Laundry 1"
-              sessionStart="17:00"
-              sessionEnd="18:00"
-            />
-            <MachineCard
-              id="Test"
-              state="available"
-              title="Mesin Laundry 1"
-              sessionStart="17:00"
-              sessionEnd="18:00"
-            />
-            <MachineCard
-              id="Test"
-              state="available"
-              title="Mesin Laundry 1"
-              sessionStart="17:00"
-              sessionEnd="18:00"
-            />
+            {availableMachines.map((machine) => (
+              <MachineCard
+                key={machine.machineId}
+                id={machine.machineId.toString()}
+                state={machine.isBooked ? 'not_available' : 'available'}
+                title={machine.machineName}
+                sessionStart={machine.sessionStart}
+                sessionEnd={machine.sessionEnd}
+              />
+            ))}
           </div>
         </ScrollArea>
 
