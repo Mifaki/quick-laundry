@@ -1,15 +1,42 @@
 import Image from 'next/image';
+import { RedirectType, redirect } from 'next/navigation';
+import { createOrder } from '@/shared/actions/paymentService';
 import { ScrollArea, ScrollBar } from '@/shared/container/ui/scroll-area';
 import { Separator } from '@/shared/container/ui/separator';
-import PaymentForm from '../payment-form/PaymentForm';
+import { ISessionsResponseData } from '@/shared/models/sessionInterface';
+import PaymentForm from './payment-form/PaymentForm';
 
-const PaymentContainer = () => {
+interface IPaymentContainer {
+  data: ISessionsResponseData;
+}
+
+const PaymentContainer = ({ data }: IPaymentContainer) => {
+  const handleSubmit = async (values: any) => {
+    'use server';
+    const payload = {
+      ...values,
+      price: 23000,
+      quantity: 1,
+    };
+
+    const result = await createOrder(payload);
+
+    if (result.success) {
+      redirect(result.data.redirect_url, RedirectType.replace);
+    } else {
+      console.error(result.message);
+    }
+  };
+
   return (
     <div className="relative grid min-h-screen w-full grid-cols-3 gap-10 px-14 py-8">
       <div className="col-span-2 h-full w-full">
         <h1 className="text-3xl font-bold">Pemesanan Laundry</h1>
         <div className="mt-4">
-          <PaymentForm />
+          <PaymentForm
+            data={data}
+            onSubmit={handleSubmit}
+          />
         </div>
       </div>
       <aside className="sticky top-10 h-fit w-full rounded-md px-4 py-6 shadow-sm">
@@ -46,8 +73,7 @@ const PaymentContainer = () => {
         </ScrollArea>
 
         {/* Order Details */}
-        <h3 className="mb-1 mt-6 text-2xl font-semibold">Mesin Laundry 1</h3>
-        <p className="text-sm text-gray-400">6 Desember 2024 | 16:00 - 18:00</p>
+        <h3 className="mb-1 mt-6 text-2xl font-semibold">Mesin Laundry</h3>
 
         <div className="mt-10 flex items-center justify-between">
           <p className="text-gray-400">Biaya Pemesanan</p>

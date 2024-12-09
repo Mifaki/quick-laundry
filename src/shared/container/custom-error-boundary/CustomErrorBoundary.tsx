@@ -3,12 +3,11 @@
 import { Button } from '../ui/button';
 
 interface ICustomErrorBoundary {
-  error: unknown; 
+  error: unknown;
 }
 
 const CustomErrorBoundary = ({ error }: ICustomErrorBoundary) => {
-  const errorMessage =
-    error instanceof Error ? error.message : 'An unknown error occurred';
+  const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
 
   return (
     <div className="p-5">

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import getBaseUrl from './shared/usecase/getBaseUrl';
 import type { NextRequest } from 'next/server';
+import getBaseUrl from './shared/usecase/getBaseUrl';
 
 export async function middleware(request: NextRequest) {
   const baseUrl = getBaseUrl();
