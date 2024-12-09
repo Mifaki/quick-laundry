@@ -74,7 +74,7 @@ export default function PaymentForm({ data, onSubmit }: PaymentFormProps) {
   useEffect(() => {
     if (selectedDate && selectedSession) {
       const formattedDate = format(selectedDate, 'dd, MM, yyyy');
-      const machinesForSlot = data.timeSlots[formattedDate]?.[selectedSession] || [];
+      const machinesForSlot = data.timeSlots[formattedDate]?.[selectedSession] ?? [];
       const availableMachinesForSlot = machinesForSlot.filter((machine) => !machine.isBooked);
 
       setAvailableMachines(availableMachinesForSlot);

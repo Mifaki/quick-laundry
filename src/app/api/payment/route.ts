@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   try {
     const data = (await req.json()) as IPaymentPayloadRoot;
 
-    if (!data || !data.price || data.quantity <= 0) {
+    if (!data?.price || data.quantity <= 0) {
       return NextResponse.json({ error: 'Invalid payment details' }, { status: 400 });
     }
 

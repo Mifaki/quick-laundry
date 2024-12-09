@@ -1,4 +1,4 @@
-import { IGeneralApiResponse } from './generalInterfaces';
+import type { IGeneralApiResponse } from './generalInterfaces';
 
 export interface ISessionDetail {
   sessionId: number;
@@ -11,11 +11,10 @@ export interface ISessionDetail {
 
 export interface ISessionsResponseData {
   dates: string[];
-  timeSlots: {
-    [date: string]: {
-      [time: string]: ISessionDetail[];
-    };
-  };
+  timeSlots: Record<
+    string, 
+    Record<string, ISessionDetail[]>
+  >;
 }
 
 export interface IAllSessionBookResponseRoot extends IGeneralApiResponse {

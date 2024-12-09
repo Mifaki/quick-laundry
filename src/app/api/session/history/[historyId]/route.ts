@@ -1,11 +1,14 @@
-import { sql } from 'drizzle-orm';
-import { NextResponse } from 'next/server';
 import { db } from '@/server/db';
 import { laundryMachines, orders, sessions } from '@/server/db/schema';
+import { NextResponse } from 'next/server';
+import { sql } from 'drizzle-orm';
 
-export async function GET(req: Request, context: { params: { historyId: string } }) {
+export async function GET(
+  _req: Request,
+  { params }: { params: Promise<{ historyId: string }> }
+) {
   try {
-    const { historyId } = context.params;
+    const { historyId } = await params;
 
     if (!historyId) {
       return NextResponse.json(
