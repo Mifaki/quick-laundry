@@ -6,6 +6,7 @@ import { Button } from '@/shared/container/ui/button';
 import { COUNTER_DATA } from '../../../models/CounterData';
 import CounterItem from '../../item-counter/CounterItem';
 import Navbar from '@/shared/container/navigation/Navbar';
+import Image from 'next/image';
 
 const LeftSection = () => {
   const router = useRouter();
@@ -13,10 +14,11 @@ const LeftSection = () => {
   return (
     <section className="flex flex-col gap-8 p-8">
       <div className='flex justify-between items-center'>
-      <img
+      <Image
         src="https://utfs.io/f/8uwNmLARV9ZHnW0Ki69ef0o7BzjkwUqPtgMdviHGEXp8C9Zb"
         alt="Quick Laundry Logo"
-        className="w-32"
+        width={100}
+        height={100}
       />
       <Navbar />
       </div>
