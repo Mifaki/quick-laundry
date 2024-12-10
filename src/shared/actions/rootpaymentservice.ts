@@ -1,5 +1,5 @@
 import { random, round, sumBy } from 'lodash';
-import Midtrans from 'midtrans-client';
+import Midtrans, { TransactionResponse } from 'midtrans-client';
 import { env } from '@/env';
 import { IMidtransPaymentParameter, IPaymentItem } from '../models/paymentinterfaces';
 
@@ -48,7 +48,7 @@ class MidtransService {
    * @param items Payment items
    * @returns Midtrans transaction token
    */
-  async createTransactionToken(items: IPaymentItem[]): Promise<string> {
+  async createTransaction(items: IPaymentItem[]): Promise<TransactionResponse> {
     const processedItems = this.preparePaymentItems(items);
 
     const grossAmount = sumBy(processedItems, (item: IPaymentItem) => item.price * item.quantity);
@@ -62,7 +62,7 @@ class MidtransService {
     };
 
     try {
-      return await this.snap.createTransactionToken(parameter);
+      return await this.snap.createTransaction(parameter);
     } catch (error) {
       console.error('Midtrans Transaction Token Creation Failed', error);
       throw new Error('Failed to create Midtrans transaction token');
