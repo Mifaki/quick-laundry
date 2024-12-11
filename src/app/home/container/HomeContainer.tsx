@@ -1,18 +1,9 @@
-import { Button } from '@/shared/container/ui/button';
+import HeroSection from "./section/hero-section/HeroSection";
 
 const HomeContainer = () => {
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center">
-      <p>HomeContainer</p>
-      <div className="mt-4 flex items-center gap-4">
-        <Button size={'lg'}>Primary</Button>
-        <Button
-          size={'lg'}
-          variant={'secondary'}
-        >
-          Secondary
-        </Button>
-      </div>
+    <div className="w-full h-screen flex justify-center items-center bg-[url('https://utfs.io/f/8uwNmLARV9ZHhq0enwG52snFeMjztZoVHa1SKwpYUdP4fNm9')] bg-cover">
+      <HeroSection />
     </div>
   );
 };
