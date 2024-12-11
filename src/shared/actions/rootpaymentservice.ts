@@ -10,7 +10,7 @@ class MidtransService {
     this.validateEnvironmentVariables();
 
     this.snap = new Midtrans.Snap({
-      isProduction: env.NODE_ENV === 'production',
+      isProduction: false,
       serverKey: env.MIDTRANS_SERVER_KEY,
       clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY!,
     });
