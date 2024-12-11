@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { getHistory } from '@/shared/actions/historyService';
-import { IDetailOrder } from '@/shared/models/detailorderInterface';
+import type { IDetailOrder } from '@/shared/models/detailorderInterface';
 import { formatDate } from '@/shared/usecase/formatDate';
 import HistoryCard from './card/HistoryCard';
 import DetailModal from './detail-modal/DetailModal';
@@ -13,7 +13,7 @@ const HistoryContainer = ({ data }: { data: IDetailOrder[] }) => {
 
   const modalHandler = (isOpen: boolean, detail?: IDetailOrder | null) => {
     setIsOpen(isOpen);
-    setSelectedData(isOpen ? detail || null : null);
+    setSelectedData(isOpen ? detail ?? null : null);
   };
 
   try {

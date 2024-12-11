@@ -2,16 +2,23 @@ import { getHistory } from '@/shared/actions/historyService';
 import HistoryContainer from './container/HistoryContainer';
 
 export default async function page() {
-  const data = await getHistory();
-  if (!data || !data.data) {
-    console.error('Invalid response from getHistory:', data);
-    throw new Error('Failed to fetch history');
+  let data;
+
+  try {
+    data = await getHistory();
+  } catch (error) {
+    console.error('Failed to fetch history data:', error);
+    return (
+      <main>
+        <p>Unable to load history. Please try again later.</p>
+      </main>
+    );
   }
 
   return (
     <>
       <main>
-        <HistoryContainer data={data.data} />
+        <HistoryContainer data={data} />
       </main>
     </>
   );

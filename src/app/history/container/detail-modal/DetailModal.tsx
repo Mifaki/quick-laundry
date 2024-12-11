@@ -1,7 +1,7 @@
 import QRCode from '@/shared/container/qr-code/QRCode';
 import { Button } from '@/shared/container/ui/button';
 import { Separator } from '@/shared/container/ui/separator';
-import { IDetailOrder } from '@/shared/models/detailorderInterface';
+import type { IDetailOrder } from '@/shared/models/detailorderInterface';
 
 interface IDetailModal {
   detail: IDetailOrder | null;
@@ -40,7 +40,7 @@ const DetailModal = (props: IDetailModal) => {
           </div>
         </div>
         <div className="flex items-center justify-center">
-          <QRCode link={props.detail?.orderId || ''} />
+          <QRCode link={props.detail?.orderId ?? ''} />
         </div>
       </div>
     </div>
