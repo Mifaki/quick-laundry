@@ -21,7 +21,8 @@ const config = {
                 pathname: '/**',
             },
         ]
-    }
+    },
+    output: 'standalone'
 };
 
 export default config;
